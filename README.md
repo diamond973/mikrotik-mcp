@@ -143,8 +143,8 @@ python3 mikrotik_mcp.py cmd <name|-> <command> [words] one-off API call ("-" = d
 ## Limitations
 
 - Each tool call opens a new API connection and logs in; there is no session reuse.
-- The write gate checks only the command verb. `export` is treated as read-only, but
-  `export file=...` creates a file on the router.
+- The write gate checks the command verb. `export` is read-only, except `export file=...`,
+  which writes a file on the router and therefore needs write mode.
 - `mt_backup` is a readable snapshot of selected `print` output, not a RouterOS `.backup`
   or a full `/export`; it cannot be restored with one command.
 - With `tls: true` the router certificate is not verified, and weak ciphers are allowed

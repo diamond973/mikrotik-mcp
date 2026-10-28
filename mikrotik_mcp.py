@@ -326,9 +326,11 @@ def run(dev, words, read_timeout=None):
 # ---------------------------------------------------------------- output
 
 
-def check_write(command):
+def check_write(command, words=()):
     verb = command.rstrip("/").rsplit("/", 1)[-1]
-    if verb in READ_VERBS:
+    # "export file=..." writes a file on the router, so it is not read-only
+    writes_file = verb == "export" and any(w.lstrip("=").startswith("file=") for w in words)
+    if verb in READ_VERBS and not writes_file:
         return
     if not ALLOW_WRITE:
         raise MtError(
@@ -415,7 +417,7 @@ def t_cmd(args):
     command = (args.get("command") or "").strip()
     if not command:
         raise MtError("the command parameter is required, for example /ip/route/print")
-    check_write(command)
+    check_write(command, args.get("words") or ())
     dev = pick_device(args.get("device"))
     words = build_words(command, args.get("words"))
     replies = run(dev, words, read_timeout=args.get("timeout"))
@@ -829,7 +831,7 @@ def cli_setup(argv):
 
 
 def cli_cmd(argv):
-    if not argv:
+    if len(argv) < 2:
         print("usage: cmd <router-name|-> <command> [words...]", file=sys.stderr)
         sys.exit(2)
     device = argv[0] if argv[0] != "-" else None
