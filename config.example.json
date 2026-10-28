@@ -1,0 +1,21 @@
+{
+  "devices": [
+    {
+      "name": "rtr1",
+      "host": "192.0.2.1",
+      "user": "mcp",
+      "password": "REPLACE_WITH_PASSWORD",
+      "port": 8728,
+      "tls": false,
+      "default": true
+    },
+    {
+      "name": "rtr2",
+      "host": "192.0.2.2",
+      "user": "mcp",
+      "password": "REPLACE_WITH_PASSWORD",
+      "port": 8729,
+      "tls": true
+    }
+  ]
+}
